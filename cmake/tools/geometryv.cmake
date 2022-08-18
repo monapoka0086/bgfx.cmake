@@ -8,6 +8,17 @@
 # You should have received a copy of the CC0 Public Domain Dedication along with
 # this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
+if (MSVC)
+    add_compile_options("/MT")
+    foreach(flag_var
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+      if(${flag_var} MATCHES "/MD")
+        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+      endif()
+    endforeach()
+endif()
+
 add_executable( geometryv ${BGFX_DIR}/tools/geometryv/geometryv.cpp )
 set_target_properties( geometryv PROPERTIES FOLDER "bgfx/tools" )
 target_link_libraries( geometryv example-common )
