@@ -13,6 +13,17 @@ if( BGFX_CUSTOM_TARGETS )
 	set_target_properties( tools PROPERTIES FOLDER "bgfx/tools" )
 endif()
 
+if (MSVC)
+    add_compile_options("/MT")
+    foreach(flag_var
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+      if(${flag_var} MATCHES "/MD")
+        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+      endif()
+    endforeach()
+endif()
+
 include( ${CMAKE_CURRENT_LIST_DIR}/tools/geometryc.cmake )
 include( ${CMAKE_CURRENT_LIST_DIR}/tools/geometryv.cmake )
 include( ${CMAKE_CURRENT_LIST_DIR}/tools/shaderc.cmake )
