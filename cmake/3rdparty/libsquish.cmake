@@ -12,6 +12,17 @@ if( TARGET squish )
 	return()
 endif()
 
+if (MSVC)
+    add_compile_options("/MT")
+    foreach(flag_var
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+      if(${flag_var} MATCHES "/MD")
+        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+      endif()
+    endforeach()
+endif()
+
 file( GLOB SQUISH_SOURCES ${BIMG_DIR}/3rdparty/libsquish/*.cpp ${BIMG_DIR}/3rdparty/libsquish/*.h ${BIMG_DIR}/3rdparty/libsquish/*.inl )
 
 add_library( squish STATIC ${SQUISH_SOURCES} )
