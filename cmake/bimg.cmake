@@ -20,6 +20,17 @@ include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/nvtt.cmake )
 include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/pvrtc.cmake )
 include( ${CMAKE_CURRENT_LIST_DIR}/3rdparty/tinyexr.cmake )
 
+if (MSVC)
+    add_compile_options("/MT")
+    foreach(flag_var
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+      if(${flag_var} MATCHES "/MD")
+        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+      endif()
+    endforeach()
+endif()
+
 # Ensure the directory exists
 if( NOT IS_DIRECTORY ${BIMG_DIR} )
 	message( SEND_ERROR "Could not load bimg, directory does not exist. ${BIMG_DIR}" )
