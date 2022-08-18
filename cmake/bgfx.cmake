@@ -13,6 +13,17 @@ if(POLICY CMP0072)
   cmake_policy(SET CMP0072 NEW)
 endif()
 
+if (MSVC)
+    add_compile_options("/MT")
+    foreach(flag_var
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+      if(${flag_var} MATCHES "/MD")
+        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+      endif()
+    endforeach()
+endif()
+
 # Ensure the directory exists
 if( NOT IS_DIRECTORY ${BGFX_DIR} )
 	message( SEND_ERROR "Could not load bgfx, directory does not exist. ${BGFX_DIR}" )
